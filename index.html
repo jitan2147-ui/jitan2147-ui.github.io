@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Study Hub</title>
+  <style>
+    :root {
+      --bg: #070d1b;
+      --card: #121c33;
+      --card-border: #1e2d4d;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --accent: #eab308;
+      --accent-text: #111827;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);.m
+      padding-bottom: 84px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      background: #0b1326;
+      border-bottom: 1px solid var(--card-border);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .icon-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid var(--card-border);
+      background: var(--card);
+      color: var(--text);
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .brand {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .hero {
+      background: linear-gradient(145deg, #1b2a4a, #0e172a);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 24px 18px;
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .hero-tag {
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      color: #60a5fa;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .hero h1 {
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 18px;
+    }
+
+    .cta-btn {
+      background: var(--accent);
+      color: var(--accent-text);
+      border: none;
+      padding: 11px 22px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 18px 14px;
+      text-align: center;
+      text-decoration: none;
+      color: var(--text);
+      display: block;
+    }
+
+    .card-icon {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .card h2 {
+      font-size: 17px;
+      margin-bottom: 4px;
+    }
+
+    .card span {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #0b1326;
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 6px;
+    }
+
+    .nav-item {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 11px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+
+    .nav-item.active {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .nav-item span:first-child {
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <button class="icon-btn" onclick="alert('Menu jald hi aayega!')">☰</button>
+    <div class="brand">Study Hub</div>
+    <button class="icon-btn" onclick="alert('Theme ready hai!')">🌙</button>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-tag">Board • Class 9 &amp; 10</div>
+      <h1>Learn • Practice • Success</h1>
+      <p>Padhai wahi, jo safalta tak le jaaye.</p>
+      <button class="cta-btn" onclick="document.getElementById('sections').scrollIntoView({ behavior: 'smooth' })">
+        Study shuru karo
+      </button>
+    </section>
+
+    <section class="grid" id="sections">
+      <a class="card" href="#class9" onclick="alert('Class 9 subjects yahan khulenge')">
+        <div class="card-icon">📘</div>
+        <h2>Class 9</h2>
+        <span>5 subjects</span>
+      </a>
+      <a class="card" href="#class10" onclick="alert('Class 10 subjects yahan khulenge')">
+        <div class="card-icon">📕</div>
+        <h2>Class 10</h2>
+        <span>5 subjects</span>
+      </a>
+      <a class="card" href="#notes" onclick="alert('Notes yahan milenge')">
+        <div class="card-icon">📝</div>
+        <h2>Notes</h2>
+        <span>Class → Subject → Chapter</span>
+      </a>
+      <a class="card" href="#mcq" onclick="alert('MCQ practice yahan shuru hogi')">
+        <div class="card-icon">❓</div>
+        <h2>MCQ</h2>
+        <span>Chapter-wise practice</span>
+      </a>
+    </section>
+  </main>
+
+  <nav class="bottom-nav">
+    <button class="nav-item" onclick="alert('PYQ section')">
+      <span>📄</span>
+      <span>PYQ</span>
+    </button>
+    <button class="nav-item" onclick="alert('Self Test section')">
+      <span>🧠</span>
+      <span>Self Test</span>
+    </button>
+    <button class="nav-item active">
+      <span>🏠</span>
+      <span>Home</span>
+    </button>
+    <button class="nav-item" onclick="alert('Updates section')">
+      <span>🔔</span>
+      <span>Updates</span>
+    </button>
+    <button class="nav-item" onclick="alert('Formula section')">
+      <span>🧮</span>
+      <span>Formula</span>
+    </button>
+  </nav>
+</body>
+</html>
