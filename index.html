@@ -1,15 +1,420 @@
-    function openClass(cls) {
-      activeClass = cls;
-      document.getElementById("card-9").classList.toggle("active", cls === "9");
-      document.getElementById("card-10").classList.toggle("active", cls === "10");
-
-      const subjects = Object.keys(studyQuestions[activeClass]);
-      if (!subjects.includes(activeSubject)) {
-        activeSubject = subjects[0];
-      }
-      activeIndex = 0;
-      answers = {};
-      renderSubjectBar();
-      renderQuiz();
-      scrollToPractice();
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Study Hub — JAC Board Class 9 & 10</title>
+  <style>
+    :root {
+      --bg: #080d1a;
+      --surface: #0f172a;
+      --card: #131e36;
+      --border: #1e2d4d;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --gold: #d4af37;
+      --gold-bright: #eab308;
+      --gold-text: #0f172a;
+      --correct: #16a34a;
+      --wrong: #dc2626;
     }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding-bottom: 80px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      background: #0b1120;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .brand {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.3px;
+    }
+
+    .board-pill {
+      font-size: 12px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 5px 11px;
+      border-radius: 999px;
+      color: var(--muted);
+    }
+
+    .container {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .hero {
+      background: linear-gradient(145deg, #16233d, #0d1526);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 24px 18px;
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .hero-tag {
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .hero h1 {
+      font-size: 22px;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+
+    .hero-btn {
+      background: var(--gold-bright);
+      color: var(--gold-text);
+      border: none;
+      padding: 11px 22px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .section-label {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .class-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .class-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 16px;
+      padding: 16px;
+      text-align: left;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .class-card.active {
+      border-color: var(--gold-bright);
+      background: #1a2847;
+    }
+
+    .class-card h3 {
+      font-size: 17px;
+      margin-bottom: 4px;
+      color: var(--gold-bright);
+    }
+
+    .class-card span {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .subject-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .sub-pill {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .sub-pill.active {
+      background: var(--gold-bright);
+      color: var(--gold-text);
+      border-color: var(--gold-bright);
+      font-weight: 700;
+    }
+
+    .quiz-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 14px;
+    }
+
+    .q-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--gold);
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .q-title {
+      font-size: 17px;
+      line-height: 1.5;
+      margin-bottom: 14px;
+      font-weight: 600;
+    }
+
+    .opt-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .opt-item {
+      width: 100%;
+      text-align: left;
+      background: #0c1426;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .opt-item.correct {
+      background: rgba(22, 163, 74, 0.22);
+      border-color: var(--correct);
+      color: #bbf7d0;
+    }
+
+    .opt-item.wrong {
+      background: rgba(220, 38, 38, 0.22);
+      border-color: var(--wrong);
+      color: #fecaca;
+    }
+
+    .exp-box {
+      margin-top: 12px;
+      padding: 11px 13px;
+      border-radius: 10px;
+      background: #0a101f;
+      border-left: 3px solid var(--gold-bright);
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.45;
+      display: none;
+    }
+
+    .nav-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .nav-btn {
+      flex: 1;
+      padding: 12px;
+      border-radius: 12px;
+      border: none;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-prev {
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-next {
+      background: var(--gold-bright);
+      color: var(--gold-text);
+    }
+
+    .result-card {
+      background: var(--card);
+      border: 1px solid var(--gold-bright);
+      border-radius: 18px;
+      padding: 22px;
+      text-align: center;
+      display: none;
+    }
+
+    .result-card h2 {
+      color: var(--gold-bright);
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+
+    .result-card p {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">Study Hub</div>
+    <div class="board-pill">JAC Board • Class 9 & 10</div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-tag">BOARD • CLASS 9 & 10</div>
+      <h1>Learn • Practice • Success</h1>
+      <p>पढ़ाई वही, जो सफलता तक ले जाए।</p>
+      <button class="hero-btn" onclick="scrollToPractice()">पढ़ाई शुरू करें</button>
+    </section>
+
+    <div class="section-label">1. अपनी क्लास चुनें</div>
+    <div class="class-grid">
+      <button class="class-card active" id="card-9" onclick="openClass('9')">
+        <h3>Class 9</h3>
+        <span>5 विषय • MCQ अभ्यास</span>
+      </button>
+      <button class="class-card" id="card-10" onclick="openClass('10')">
+        <h3>Class 10</h3>
+        <span>5 विषय • MCQ अभ्यास</span>
+      </button>
+    </div>
+
+    <div class="section-label" id="practiceStart">2. विषय चुनें</div>
+    <div class="subject-bar" id="subjectBar"></div>
+
+    <div class="quiz-card" id="quizCard">
+      <div class="q-header">
+        <span id="qBadge"></span>
+        <span id="qCount"></span>
+      </div>
+      <div class="q-title" id="qTitle"></div>
+      <div class="opt-list" id="optList"></div>
+      <div class="exp-box" id="expBox"></div>
+    </div>
+
+    <div class="nav-row" id="navRow">
+      <button class="nav-btn btn-prev" onclick="goPrev()">← पिछला</button>
+      <button class="nav-btn btn-next" onclick="goNext()">अगला →</button>
+    </div>
+
+    <div class="result-card" id="resultCard">
+      <h2 id="resTitle"></h2>
+      <p id="resSub"></p>
+      <button class="hero-btn" onclick="resetSet()">दोबारा अभ्यास करें</button>
+    </div>
+  </main>
+
+  <script>
+    const studyQuestions = {
+      "9": {
+        "Science": [
+          {
+            q: "गर्मियों में घड़े (मटके) का पानी ठंडा क्यों रहता है?",
+            options: ["वाष्पीकरण के कारण", "संघनन के कारण", "ऊर्ध्वपातन के कारण", "जमने के कारण"],
+            ans: 0,
+            exp: "मटके के छोटे छिद्रों से पानी बाहर आकर भाप बनता है और अंदर की गर्मी सोख लेता है, जिससे पानी ठंडा रहता है।"
+          },
+          {
+            q: "जब कोई चलती हुई बस अचानक रुकती है, तो यात्री आगे की तरफ क्यों झुक जाते हैं?",
+            options: ["गुरुत्वाकर्षण के कारण", "गति के जड़त्व के कारण", "घर्षण के कारण", "हवा के दबाव के कारण"],
+            ans: 1,
+            exp: "बस रुकने पर पैर रुक जाते हैं, लेकिन शरीर का ऊपरी हिस्सा गति में ही बने रहने की कोशिश करता है।"
+          },
+          {
+            q: "पौधों में पानी और खनिज को जड़ों से पत्तियों तक कौन ले जाता है?",
+            options: ["फ्लोएम", "जाइलम", "रंध्र", "क्लोरोप्लास्ट"],
+            ans: 1,
+            exp: "जाइलम ऊतक मिट्टी से पानी और खनिज लवण को ऊपर पत्तियों तक पहुँचाने का काम करता है।"
+          }
+        ],
+        "Maths": [
+          {
+            q: "यदि किसी वृत्त की त्रिज्या को दोगुना कर दिया जाए, तो उसका क्षेत्रफल कितना गुना बढ़ जाएगा?",
+            options: ["2 गुना", "3 गुना", "4 गुना", "8 गुना"],
+            ans: 2,
+            exp: "वृत्त का क्षेत्रफल πr² होता है। त्रिज्या 2r करने पर क्षेत्रफल π(2r)² = 4πr², यानी 4 गुना हो जाता है।"
+          },
+          {
+            q: "किसी त्रिभुज में सबसे बड़ी भुजा के सामने वाला कोण कैसा होता है?",
+            options: ["सबसे छोटा", "सबसे बड़ा", "हमेशा 90°", "हमेशा 60°"],
+            ans: 1,
+            exp: "त्रिभुज के नियम के अनुसार, सबसे लंबी भुजा के सामने वाला कोण हमेशा सबसे बड़ा होता है।"
+          }
+        ],
+        "Social Science": [
+          {
+            q: "झारखंड के किस स्वतंत्रता सेनानी को 'धरती आबा' के नाम से जाना जाता है?",
+            options: ["सिदो मुर्मू", "बिरसा मुंडा", "तिलका मांझी", "जत्रा उरांव"],
+            ans: 1,
+            exp: "बिरसा मुंडा को उनके समाज सुधार और अंग्रेजों के खिलाफ संघर्ष के कारण 'धरती आबा' कहा जाता है।"
+          },
+          {
+            q: "भारत के किस राज्य से होकर कर्क रेखा गुजरती है?",
+            options: ["बिहार", "झारखंड", "ओडिशा", "उत्तर प्रदेश"],
+            ans: 1,
+            exp: "कर्क रेखा झारखंड की राजधानी रांची के पास से होकर गुजरती है।"
+          }
+        ],
+        "Hindi": [
+          {
+            q: "'दो बैलों की कथा' कहानी के मुख्य दो बैलों के नाम क्या थे?",
+            options: ["हीरा और मोती", "राम और श्याम", "शेरू और कालू", "सोना और चांदी"],
+            ans: 0,
+            exp: "मुंशी प्रेमचंद की इस कहानी में हीरा और मोती दो पक्के दोस्त बैल थे।"
+          },
+          {
+            q: "कबीर की साखियों के अनुसार हमें कैसी वाणी बोलनी चाहिए?",
+            options: ["तेज और कड़वी", "मीठी और शीतल", "बिना सोचे-समझे", "बहुत कम"],
+            ans: 1,
+            exp: "कबीर कहते हैं कि मीठी वाणी बोलने से खुद को भी शांति मिलती है और सुनने वाले को भी सुख मिलता है।"
+          }
+        ],
+        "English": [
+          {
+            q: "'द फन दे हैड' कहानी में मार्गी और टॉमी को असली छपी हुई किताब कहाँ मिली?",
+            options: ["स्कूल की लाइब्रेरी में", "टॉमी के घर की अटारी में", "किताबों की दुकान में", "खेल के मैदान में"],
+            ans: 1,
+            exp: "टॉमी को वह बहुत पुरानी कागज की किताब अपने घर की अटारी (ऊपर की कोठरी) में मिली थी।"
+          },
+          {
+            q: "उस्ताद बिस्मिल्लाह खान को बचपन से सबसे ज्यादा क्या बजाना पसंद था?",
+            options: ["तबला", "शहनाई", "बांसुरी", "सितार"],
+            ans: 1,
+            exp: "उस्ताद बिस्मिल्लाह खान ने शहनाई को शास्त्रीय मंच तक पहुँचाया और दुनिया भर में मशहूर किया।"
+          }
+        ]
+      },
+      "10": {
