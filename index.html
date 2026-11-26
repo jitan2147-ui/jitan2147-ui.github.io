@@ -6,15 +6,18 @@
   <title>Study Hub — JAC Board Class 9 & 10</title>
   <style>
     :root {
-      --bg: #080d1a;
-      --surface: #0c1324;
-      --card: #121d33;
-      --border: #1e2d4d;
+      --bg: #050b18;
+      --surface: #0a1428;
+      --card: #0f1d38;
+      --card-2: #16294d;
+      --border: rgba(234, 179, 8, 0.28);
+      --border-strong: rgba(250, 204, 21, 0.72);
       --text: #f8fafc;
-      --muted: #94a3b8;
-      --gold: #d4af37;
-      --gold-bright: #eab308;
-      --gold-text: #0f172a;
+      --muted: #cbd5e1;
+      --gold: #eab308;
+      --gold-bright: #facc15;
+      --gold-deep: #ca8a04;
+      --gold-text: #07101f;
       --correct: #16a34a;
       --wrong: #dc2626;
     }
@@ -27,10 +30,31 @@
     }
 
     body {
-      background: var(--bg);
+      background:
+        radial-gradient(circle at top, rgba(37, 99, 235, 0.22), transparent 45%),
+        radial-gradient(circle at bottom right, rgba(234, 179, 8, 0.12), transparent 40%),
+        var(--bg);
       color: var(--text);
       min-height: 100vh;
-      padding-bottom: 86px;
+      padding-bottom: 88px;
+    }
+
+    @keyframes goldPulse {
+      0%, 100% {
+        box-shadow: 0 0 14px rgba(234, 179, 8, 0.16), inset 0 0 8px rgba(250, 204, 21, 0.06);
+      }
+      50% {
+        box-shadow: 0 0 24px rgba(250, 204, 21, 0.32), inset 0 0 12px rgba(250, 204, 21, 0.14);
+      }
+    }
+
+    @keyframes sheen {
+      0% {
+        transform: translateX(-140%) skewX(-20deg);
+      }
+      60%, 100% {
+        transform: translateX(240%) skewX(-20deg);
+      }
     }
 
     header {
@@ -38,18 +62,19 @@
       align-items: center;
       justify-content: space-between;
       padding: 12px 16px;
-      background: #090f1d;
+      background: linear-gradient(90deg, #071124, #0c1d3d, #071124);
       border-bottom: 1px solid var(--border);
       position: sticky;
       top: 0;
       z-index: 30;
+      backdrop-filter: blur(8px);
     }
 
     .icon-btn {
       width: 38px;
       height: 38px;
       border-radius: 50%;
-      background: var(--card);
+      background: linear-gradient(145deg, #13264a, #0b162c);
       border: 1px solid var(--border);
       color: var(--gold-bright);
       font-size: 18px;
@@ -57,12 +82,15 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
     }
 
     .brand {
       font-size: 20px;
-      font-weight: 700;
-      color: var(--text);
+      font-weight: 800;
+      background: linear-gradient(90deg, #fde047, #eab308, #fef08a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
       letter-spacing: 0.4px;
     }
 
@@ -73,26 +101,43 @@
     }
 
     .hero {
-      background: linear-gradient(150deg, #172642, #0d1526);
-      border: 1px solid var(--border);
-      border-radius: 20px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(145deg, #172d56, #0d1c38 55%, #091224);
+      border: 1px solid var(--border-strong);
+      border-radius: 22px;
       padding: 24px 18px;
       text-align: center;
       margin-bottom: 18px;
+      animation: goldPulse 3.6s ease-in-out infinite;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 45%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(250, 204, 21, 0.14), transparent);
+      animation: sheen 5s ease-in-out infinite;
+      pointer-events: none;
     }
 
     .hero-tag {
       font-size: 11px;
       letter-spacing: 2px;
-      color: var(--muted);
+      color: #fde68a;
       text-transform: uppercase;
       margin-bottom: 8px;
+      font-weight: 600;
     }
 
     .hero h1 {
       font-size: 22px;
       margin-bottom: 8px;
       color: var(--gold-bright);
+      text-shadow: 0 2px 12px rgba(234, 179, 8, 0.25);
     }
 
     .hero p {
@@ -102,14 +147,17 @@
     }
 
     .hero-btn {
-      background: var(--gold-bright);
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #fde047, #eab308 60%, #ca8a04);
       color: var(--gold-text);
       border: none;
       padding: 12px 26px;
       border-radius: 999px;
       font-size: 15px;
-      font-weight: 700;
+      font-weight: 800;
       cursor: pointer;
+      box-shadow: 0 6px 20px rgba(234, 179, 8, 0.35);
     }
 
     .hub-grid {
@@ -120,13 +168,19 @@
     }
 
     .hub-card {
-      background: linear-gradient(160deg, #142038, #0e1729);
+      background: linear-gradient(160deg, #152950, #0d1a33 70%, #091224);
       border: 1px solid var(--border);
       border-radius: 20px;
       padding: 20px 14px;
       text-align: center;
       cursor: pointer;
-      transition: 0.18s;
+      transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+      box-shadow: 0 8px 22px rgba(2, 8, 23, 0.55);
+    }
+
+    .hub-card:hover {
+      border-color: var(--border-strong);
+      box-shadow: 0 8px 24px rgba(234, 179, 8, 0.2);
     }
 
     .hub-card:active {
@@ -135,18 +189,19 @@
     }
 
     .hub-badge {
-      width: 52px;
-      height: 52px;
+      width: 54px;
+      height: 54px;
       margin: 0 auto 12px;
       border-radius: 16px;
-      background: #1b2b4a;
-      border: 1px solid #2b3f66;
+      background: linear-gradient(145deg, #1d3666, #10203d);
+      border: 1px solid var(--border-strong);
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 22px;
       font-weight: 800;
       color: var(--gold-bright);
+      box-shadow: 0 0 14px rgba(234, 179, 8, 0.18);
     }
 
     .hub-card h3 {
@@ -178,13 +233,13 @@
     }
 
     .back-btn {
-      background: var(--card);
+      background: linear-gradient(145deg, #142648, #0b162c);
       border: 1px solid var(--border);
-      color: var(--text);
+      color: var(--gold-bright);
       padding: 8px 14px;
       border-radius: 999px;
       font-size: 13px;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
     }
 
@@ -194,7 +249,7 @@
     }
 
     .cls-pill {
-      background: var(--card);
+      background: #0e1c36;
       border: 1px solid var(--border);
       color: var(--text);
       padding: 7px 14px;
@@ -205,14 +260,15 @@
     }
 
     .cls-pill.active {
-      background: var(--gold-bright);
+      background: linear-gradient(135deg, #fde047, #eab308);
       color: var(--gold-text);
       border-color: var(--gold-bright);
+      box-shadow: 0 0 14px rgba(234, 179, 8, 0.3);
     }
 
     .section-label {
       font-size: 13px;
-      color: var(--muted);
+      color: #fde68a;
       margin-bottom: 10px;
       font-weight: 600;
     }
@@ -225,7 +281,7 @@
     }
 
     .sub-pill {
-      background: var(--card);
+      background: #0e1c36;
       border: 1px solid var(--border);
       color: var(--text);
       padding: 8px 14px;
@@ -235,18 +291,20 @@
     }
 
     .sub-pill.active {
-      background: var(--gold-bright);
+      background: linear-gradient(135deg, #fde047, #eab308);
       color: var(--gold-text);
       border-color: var(--gold-bright);
-      font-weight: 700;
+      font-weight: 800;
+      box-shadow: 0 0 12px rgba(234, 179, 8, 0.28);
     }
 
     .quiz-card {
-      background: var(--card);
+      background: linear-gradient(160deg, #132547, #0c172e);
       border: 1px solid var(--border);
-      border-radius: 18px;
+      border-radius: 20px;
       padding: 18px;
       margin-bottom: 14px;
+      box-shadow: 0 10px 24px rgba(2, 8, 23, 0.5);
     }
 
     .q-header {
@@ -255,7 +313,7 @@
       font-size: 12px;
       color: var(--gold-bright);
       margin-bottom: 10px;
-      font-weight: 600;
+      font-weight: 700;
     }
 
     .q-title {
@@ -274,23 +332,29 @@
     .opt-item {
       width: 100%;
       text-align: left;
-      background: #0c1426;
-      border: 1px solid var(--border);
+      background: #091326;
+      border: 1px solid rgba(148, 163, 184, 0.25);
       color: var(--text);
       padding: 12px 14px;
       border-radius: 12px;
       font-size: 15px;
       cursor: pointer;
+      transition: border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .opt-item:hover:not(:disabled) {
+      border-color: var(--gold);
+      background: #0f1e3b;
     }
 
     .opt-item.correct {
-      background: rgba(22, 163, 74, 0.22);
+      background: rgba(22, 163, 74, 0.24);
       border-color: var(--correct);
       color: #bbf7d0;
     }
 
     .opt-item.wrong {
-      background: rgba(220, 38, 38, 0.22);
+      background: rgba(220, 38, 38, 0.24);
       border-color: var(--wrong);
       color: #fecaca;
     }
@@ -299,7 +363,7 @@
       margin-top: 12px;
       padding: 11px 13px;
       border-radius: 10px;
-      background: #0a101f;
+      background: #081020;
       border-left: 3px solid var(--gold-bright);
       font-size: 13px;
       color: var(--muted);
@@ -323,23 +387,25 @@
     }
 
     .btn-prev {
-      background: var(--card);
+      background: #10203d;
       color: var(--text);
       border: 1px solid var(--border);
     }
 
     .btn-next {
-      background: var(--gold-bright);
+      background: linear-gradient(135deg, #fde047, #eab308);
       color: var(--gold-text);
+      box-shadow: 0 4px 16px rgba(234, 179, 8, 0.28);
     }
 
     .result-card {
-      background: var(--card);
-      border: 1px solid var(--gold-bright);
-      border-radius: 18px;
+      background: linear-gradient(160deg, #162a50, #0c172e);
+      border: 1px solid var(--border-strong);
+      border-radius: 20px;
       padding: 22px;
       text-align: center;
       display: none;
+      box-shadow: 0 0 24px rgba(234, 179, 8, 0.2);
     }
 
     .result-card h2 {
@@ -359,7 +425,7 @@
       bottom: 0;
       left: 0;
       right: 0;
-      background: #090f1d;
+      background: linear-gradient(90deg, #071124, #0b1936, #071124);
       border-top: 1px solid var(--border);
       display: grid;
       grid-template-columns: repeat(5, 1fr);
@@ -383,6 +449,7 @@
     .b-item.active {
       color: var(--gold-bright);
       font-weight: 700;
+      text-shadow: 0 0 10px rgba(250, 204, 21, 0.35);
     }
 
     .b-icon {
